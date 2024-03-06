@@ -4,6 +4,7 @@ import com.systems.springframework.spring6restmvc.model.Beer;
 import com.systems.springframework.spring6restmvc.service.BeerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,8 +33,32 @@ public class BeerController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity saveBeerObject(@RequestBody Beer beer){
-        beerService.saveBeerObject(beer);
+        Beer savedBeer=beerService.saveBeerObject(beer);
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "api/v1/beer/json/"+savedBeer.getId().toString());
+
+        return new ResponseEntity(headers,HttpStatus.CREATED);
     }
+    @PutMapping("{beerId}")
+    public ResponseEntity updateByUuid(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer){
+        beerService.updateByUuid(beerId,beer);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("{beerId}")
+    public ResponseEntity deleteByUuid(@PathVariable("beerId") UUID beerId){
+        beerService.deleteByUuid(beerId);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("{beerId}")
+    public ResponseEntity patchByUuid(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer){
+        beerService.patchByUuid(beerId,beer);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
 }

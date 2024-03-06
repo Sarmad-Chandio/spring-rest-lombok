@@ -3,6 +3,7 @@ package com.systems.springframework.spring6restmvc.service;
 import com.systems.springframework.spring6restmvc.model.Beer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -85,5 +86,64 @@ public class BeerServiceImpl implements BeerService {
 
         beerMap.put(savedBeer.getId(),savedBeer);
         return savedBeer;
+    }
+
+    @Override
+    public void updateByUuid(UUID beerId, Beer beer) {
+        //get existing data
+        Beer existingBeerObject=beerMap.get(beerId);
+        //update existing
+        existingBeerObject.setBeerName(beer.getBeerName());
+        existingBeerObject.setBeerStyle(beer.getBeerStyle());
+        existingBeerObject.setPrice(beer.getPrice());
+        existingBeerObject.setUpc(beer.getUpc());
+        existingBeerObject.setVersion(beer.getVersion());
+        existingBeerObject.setQuantityOnHold(beer.getQuantityOnHold());
+
+        beerMap.put(existingBeerObject.getId(),existingBeerObject);
+
+    }
+
+    @Override
+    public void deleteByUuid(UUID beerId) {
+        //deleting from MAP
+        beerMap.remove(beerId);
+
+    }
+
+    @Override
+    public void patchByUuid(UUID beerId, Beer beer) {
+        //get existing data
+        Beer existingBeerObject=beerMap.get(beerId);
+
+        if (StringUtils.hasText(beer.getBeerName())) {
+            existingBeerObject.setBeerName(beer.getBeerName());
+        }
+
+        // Check and update beer style if not null
+        if (beer.getBeerStyle() != null) {
+            existingBeerObject.setBeerStyle(beer.getBeerStyle());
+        }
+
+        // Check and update price if not null
+        if (beer.getPrice() != null) {
+            existingBeerObject.setPrice(beer.getPrice());
+        }
+
+        // Check and update UPC if not emtpy
+        if (StringUtils.hasText(beer.getUpc())) {
+            existingBeerObject.setUpc(beer.getUpc());
+        }
+
+        // Check and update version if not null
+        if (beer.getVersion() != null) {
+            existingBeerObject.setVersion(beer.getVersion());
+        }
+
+        // Check and update quantity on hold if not null
+        if (beer.getQuantityOnHold() != null) {
+            existingBeerObject.setQuantityOnHold(beer.getQuantityOnHold());
+        }
+
     }
 }
