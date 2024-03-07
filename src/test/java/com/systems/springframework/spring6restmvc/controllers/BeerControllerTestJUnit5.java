@@ -2,6 +2,7 @@ package com.systems.springframework.spring6restmvc.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.systems.springframework.spring6restmvc.exceptions.NotFoundException;
 import com.systems.springframework.spring6restmvc.model.Beer;
 import com.systems.springframework.spring6restmvc.service.BeerService;
 import com.systems.springframework.spring6restmvc.service.BeerServiceImpl;
@@ -15,10 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.verify;
@@ -152,7 +150,7 @@ class BeerControllerTestJUnit5 {
         //ask mockito to return response data
        Beer beerTest=beerServiceImpl.beerList().get(0);
 
-       given(beerService.getBeerByUuid(beerTest.getId())).willReturn(beerTest);
+       given(beerService.getBeerByUuid(beerTest.getId())).willReturn(Optional.of(beerTest));//return optional : it could be mull or data
 
 
         mockMvc.perform(get("/api/v1/beer/"+ beerTest.getId())
@@ -166,4 +164,14 @@ class BeerControllerTestJUnit5 {
                 .andExpect(jsonPath("$.beerName", is(beerTest.getBeerName())));
 
     }
+    //Throw Exception using mockito
+    @Test
+    void getBeerByUuidNotFoundException() throws Exception {
+
+        given(beerService.getBeerByUuid(any(UUID.class))).willThrow(NotFoundException.class);
+
+        mockMvc.perform(get(BeerController.GET_BEER_PATH_BY_ID, UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
+
 }

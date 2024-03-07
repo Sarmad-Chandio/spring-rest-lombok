@@ -63,10 +63,10 @@ public class BeerServiceImpl implements BeerService {
         return new ArrayList<>(beerMap.values());
     }
     @Override
-    public Beer getBeerByUuid(UUID id) {
+    public Optional<Beer> getBeerByUuid(UUID id) {
         log.debug("Beer id in service was called "+ id);
 
-        return beerMap.get(id);
+        return Optional.of(beerMap.get(id));
     }
 
     @Override

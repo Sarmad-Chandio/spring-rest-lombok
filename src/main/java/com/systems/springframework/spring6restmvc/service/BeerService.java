@@ -3,14 +3,15 @@ package com.systems.springframework.spring6restmvc.service;
 import com.systems.springframework.spring6restmvc.model.Beer;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface BeerService {
     List<Beer> beerList();
 
-    public Beer getBeerByUuid(UUID id);
+     Optional<Beer> getBeerByUuid(UUID id);
 
-    public Beer saveBeerObject(Beer beer);
+     Beer saveBeerObject(Beer beer);
 
     void updateByUuid(UUID beerId, Beer beer);
 
