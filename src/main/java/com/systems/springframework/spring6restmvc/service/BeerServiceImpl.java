@@ -1,6 +1,6 @@
 package com.systems.springframework.spring6restmvc.service;
 
-import com.systems.springframework.spring6restmvc.model.Beer;
+import com.systems.springframework.spring6restmvc.model.BeerDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -13,11 +13,11 @@ import java.util.*;
 @Service
 public class BeerServiceImpl implements BeerService {
 
-    private Map<UUID, Beer> beerMap;
+    private Map<UUID, BeerDTO> beerMap;
 
     public BeerServiceImpl(){
         this.beerMap=new HashMap<>();
-        Beer beer1 = Beer.builder()
+        BeerDTO beer1 = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Galaxy Cat")
@@ -29,7 +29,7 @@ public class BeerServiceImpl implements BeerService {
                 .updatedDate(LocalDateTime.now())
                 .build();
 
-        Beer beer2 = Beer.builder()
+        BeerDTO beer2 = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Chao Cat")
@@ -41,7 +41,7 @@ public class BeerServiceImpl implements BeerService {
                 .updatedDate(LocalDateTime.now())
                 .build();
 
-        Beer beer3 = Beer.builder()
+        BeerDTO beer3 = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Chao Marinee")
@@ -59,20 +59,20 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<Beer> beerList(){
+    public List<BeerDTO> beerList(){
         return new ArrayList<>(beerMap.values());
     }
     @Override
-    public Optional<Beer> getBeerByUuid(UUID id) {
+    public Optional<BeerDTO> getBeerByUuid(UUID id) {
         log.debug("Beer id in service was called "+ id);
 
         return Optional.of(beerMap.get(id));
     }
 
     @Override
-    public Beer saveBeerObject(Beer beer) {
+    public BeerDTO saveBeerObject(BeerDTO beer) {
         //mimicking DB layer implimentations
-        Beer savedBeer= Beer.builder()
+        BeerDTO savedBeer= BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .beerName(beer.getBeerName())
                 .createdDate(LocalDateTime.now())
@@ -89,9 +89,9 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void updateByUuid(UUID beerId, Beer beer) {
+    public void updateByUuid(UUID beerId, BeerDTO beer) {
         //get existing data
-        Beer existingBeerObject=beerMap.get(beerId);
+        BeerDTO existingBeerObject=beerMap.get(beerId);
         //update existing
         existingBeerObject.setBeerName(beer.getBeerName());
         existingBeerObject.setBeerStyle(beer.getBeerStyle());
@@ -112,9 +112,9 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void patchByUuid(UUID beerId, Beer beer) {
+    public void patchByUuid(UUID beerId, BeerDTO beer) {
         //get existing data
-        Beer existingBeerObject=beerMap.get(beerId);
+        BeerDTO existingBeerObject=beerMap.get(beerId);
 
         if (StringUtils.hasText(beer.getBeerName())) {
             existingBeerObject.setBeerName(beer.getBeerName());

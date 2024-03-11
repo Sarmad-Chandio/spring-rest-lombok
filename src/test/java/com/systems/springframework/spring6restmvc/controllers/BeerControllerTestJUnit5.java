@@ -1,9 +1,8 @@
 package com.systems.springframework.spring6restmvc.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.systems.springframework.spring6restmvc.exceptions.NotFoundException;
-import com.systems.springframework.spring6restmvc.model.Beer;
+import com.systems.springframework.spring6restmvc.model.BeerDTO;
 import com.systems.springframework.spring6restmvc.service.BeerService;
 import com.systems.springframework.spring6restmvc.service.BeerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +41,7 @@ class BeerControllerTestJUnit5 {
     @Captor
     ArgumentCaptor<UUID> uuidArgumentCaptor;
     @Captor
-    ArgumentCaptor<Beer> beerArgumentCaptor;
+    ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
     @MockBean
     BeerService beerService;
@@ -58,7 +57,7 @@ class BeerControllerTestJUnit5 {
     //test case for beerList
     @Test
     void beerList() throws Exception {
-        List<Beer> beerList=beerServiceImpl.beerList();
+        List<BeerDTO> beerList=beerServiceImpl.beerList();
 
         given(beerService.beerList()).willReturn(beerList);
 
@@ -70,7 +69,7 @@ class BeerControllerTestJUnit5 {
     }
     @Test
     void testDeleteBeer() throws Exception{
-        Beer beer=beerServiceImpl.beerList().get(0);
+        BeerDTO beer=beerServiceImpl.beerList().get(0);
 
         mockMvc.perform(delete("/api/v1/beer/"+ beer.getId())
                 .accept(MediaType.APPLICATION_JSON))
@@ -82,7 +81,7 @@ class BeerControllerTestJUnit5 {
     }
     @Test
     void testPatchBeer() throws Exception{
-        Beer beer=beerServiceImpl.beerList().get(0);
+        BeerDTO beer=beerServiceImpl.beerList().get(0);
 
         Map<String, Object> beerMap=new HashMap<>();
         beerMap.put("beerName","New Name");
@@ -103,7 +102,7 @@ class BeerControllerTestJUnit5 {
 
     @Test
     void testUpdateByUuid() throws Exception{
-        Beer beer= beerServiceImpl.beerList().get(0);
+        BeerDTO beer= beerServiceImpl.beerList().get(0);
 
         mockMvc.perform(put("/api/v1/beer/"+ beer.getId())
                 .accept(MediaType.APPLICATION_JSON)
@@ -112,7 +111,7 @@ class BeerControllerTestJUnit5 {
                 .andExpect(status().isNoContent());
         // we can also use ArgumentCaptor for "any" argument
 
-        verify(beerService).updateByUuid(any(UUID.class), any(Beer.class));
+        verify(beerService).updateByUuid(any(UUID.class), any(BeerDTO.class));
     }
 
     @Test
@@ -123,13 +122,13 @@ class BeerControllerTestJUnit5 {
         // object Mapper could be provided by Spring Framework
         objectMapper.findAndRegisterModules();
        */
-        Beer beer=beerServiceImpl.beerList().get(0);
+        BeerDTO beer=beerServiceImpl.beerList().get(0);
         //beer object should not have version as well as id
         beer.setVersion(null);
         beer.setId(null);
 
         // perform mockito : returning 1st element form beeList method and passing to sAve beer service
-        given(beerService.saveBeerObject(any(Beer.class))).willReturn(beerServiceImpl.beerList().get(1));
+        given(beerService.saveBeerObject(any(BeerDTO.class))).willReturn(beerServiceImpl.beerList().get(1));
 
         //perform mocking with the help of mvc
         mockMvc.perform(post("/api/v1/beer") //action POST
@@ -148,7 +147,7 @@ class BeerControllerTestJUnit5 {
     void getBeerByUuid() throws Exception {
 
         //ask mockito to return response data
-       Beer beerTest=beerServiceImpl.beerList().get(0);
+       BeerDTO beerTest=beerServiceImpl.beerList().get(0);
 
        given(beerService.getBeerByUuid(beerTest.getId())).willReturn(Optional.of(beerTest));//return optional : it could be mull or data
 
