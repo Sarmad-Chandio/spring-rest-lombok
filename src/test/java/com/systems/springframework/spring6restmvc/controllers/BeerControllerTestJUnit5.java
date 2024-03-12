@@ -177,5 +177,17 @@ class BeerControllerTestJUnit5 {
         mockMvc.perform(get(BeerController.GET_BEER_PATH_BY_ID, UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
+    @Test
+    void testCreateBeerNullBeerName() throws Exception {
+        BeerDTO beerDTO = BeerDTO.builder().build();
+
+        given(beerService.saveBeerObject(any(BeerDTO.class))).willReturn(beerServiceImpl.beerList().get(0));
+        
+        mockMvc.perform(post(BeerController.GET_BEER_PATH)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beerDTO)))
+                        .andExpect(status().isBadRequest());
+    }
 
 }
