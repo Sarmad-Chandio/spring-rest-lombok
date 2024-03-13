@@ -3,6 +3,7 @@ package com.systems.springframework.spring6restmvc.controllers;
 import com.systems.springframework.spring6restmvc.exceptions.NotFoundException;
 import com.systems.springframework.spring6restmvc.model.BeerDTO;
 import com.systems.springframework.spring6restmvc.service.BeerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

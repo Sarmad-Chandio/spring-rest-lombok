@@ -115,7 +115,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void patchByUuid(UUID beerId, BeerDTO beer) {
+    public Optional<BeerDTO> patchByUuid(UUID beerId, BeerDTO beer) {
         //get existing data
         BeerDTO existingBeerObject=beerMap.get(beerId);
 
@@ -148,5 +148,6 @@ public class BeerServiceImpl implements BeerService {
             existingBeerObject.setQuantityOnHold(beer.getQuantityOnHold());
         }
 
+        return Optional.of(existingBeerObject);
     }
 }

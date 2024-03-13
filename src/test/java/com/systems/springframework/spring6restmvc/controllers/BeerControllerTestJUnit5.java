@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.*;
 
@@ -183,11 +184,15 @@ class BeerControllerTestJUnit5 {
 
         given(beerService.saveBeerObject(any(BeerDTO.class))).willReturn(beerServiceImpl.beerList().get(0));
         
-        mockMvc.perform(post(BeerController.GET_BEER_PATH)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(beerDTO)))
-                        .andExpect(status().isBadRequest());
+        MvcResult result=mockMvc.perform(post(BeerController.GET_BEER_PATH)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beerDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(6)))
+                .andReturn();
+
+        System.out.println(result.getResponse().getContentAsString());
     }
 
 }
