@@ -4,6 +4,8 @@ import com.systems.springframework.spring6restmvc.mappers.BeerMapper;
 import com.systems.springframework.spring6restmvc.model.BeerDTO;
 import com.systems.springframework.spring6restmvc.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,8 +22,10 @@ import java.util.stream.Collectors;
 public class BeerServiceImplJpa implements BeerService {
     private final BeerRepository beerRepository;
     private final BeerMapper beerMapper;
+    public static Logger logger= LogManager.getLogger(BeerServiceImplJpa.class);
     @Override
     public List<BeerDTO> beerList() {
+        logger.info("inside beerList ");
         return beerRepository.findAll()
                 .stream()
                 .map(beerMapper::beerToBeerDto)
@@ -30,6 +34,7 @@ public class BeerServiceImplJpa implements BeerService {
 
     @Override
     public Optional<BeerDTO> getBeerByUuid(UUID id) {
+        logger.info("inside getBeerByUuid()  id="+id);
         return Optional.ofNullable(beerMapper.beerToBeerDto(beerRepository.findById(id)
                 .orElse(null)));
     }
